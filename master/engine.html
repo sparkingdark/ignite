@@ -407,7 +407,7 @@ on every <a class="reference internal" href="#ignite.engine.engine.Engine.run" t
     <span class="n">e</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">iteration</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2"> - batch loss: </span><span class="si">{}</span><span class="s2">, lr: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">batch_loss</span><span class="p">,</span> <span class="n">lr</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> - batch loss: </span><span class="si">{</span><span class="n">batch_loss</span><span class="si">}</span><span class="s2">, lr: </span><span class="si">{</span><span class="n">lr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">trainer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data_loader</span><span class="p">,</span> <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
@@ -496,7 +496,7 @@ passed here, for example during <code class="xref py py-attr docutils literal no
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span><span class="n">process_function</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">print_epoch</span><span class="p">(</span><span class="n">engine</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">engine</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">EPOCH_COMPLETED</span><span class="p">,</span> <span class="n">print_epoch</span><span class="p">)</span>
 
@@ -597,7 +597,7 @@ or any <code class="docutils literal notranslate"><span class="pre">event_name</
 
 <span class="nd">@engine</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">EPOCH_COMPLETED</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">print_epoch</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="nd">@engine</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">EPOCH_COMPLETED</span> <span class="o">|</span> <span class="n">Events</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">execute_something</span><span class="p">():</span>
@@ -1195,7 +1195,7 @@ remove method, with-statement, or context manager protocol. Returned from
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">()</span>
 
 <span class="k">def</span> <span class="nf">print_epoch</span><span class="p">(</span><span class="n">engine</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch: </span><span class="si">{</span><span class="n">engine</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">engine</span><span class="o">.</span><span class="n">add_event_handler</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">EPOCH_COMPLETED</span><span class="p">,</span> <span class="n">print_epoch</span><span class="p">):</span>
     <span class="c1"># print_epoch handler registered for a single run</span>
