@@ -842,7 +842,8 @@
         <span class="n">is_done_iters</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">max_iters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">state</span><span class="o">.</span><span class="n">max_iters</span>
         <span class="n">is_done_count</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">state</span><span class="o">.</span><span class="n">epoch_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">state</span><span class="o">.</span><span class="n">epoch_length</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span>  <span class="c1"># type: ignore[operator]</span>
+            <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">state</span><span class="o">.</span><span class="n">epoch_length</span> <span class="o">*</span> <span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span>
         <span class="p">)</span>
         <span class="n">is_done_epochs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">epoch</span> <span class="o">&gt;=</span> <span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span>
         <span class="k">return</span> <span class="n">is_done_iters</span> <span class="ow">or</span> <span class="n">is_done_count</span> <span class="ow">or</span> <span class="n">is_done_epochs</span>
@@ -1114,12 +1115,17 @@
                     <span class="c1"># Should exit while loop if we can not iterate</span>
                     <span class="k">if</span> <span class="n">should_exit</span><span class="p">:</span>
                         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_done</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">):</span>
+                            <span class="n">total_iters</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span>
+                                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                                <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">max_iters</span>
+                            <span class="p">)</span>
+
                             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                                 <span class="s2">&quot;Data iterator can not provide data anymore but required total number of &quot;</span>
                                 <span class="s2">&quot;iterations to run is not reached. &quot;</span>
                                 <span class="s2">&quot;Current iteration: </span><span class="si">{}</span><span class="s2"> vs Total iterations to run : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">iteration</span><span class="p">,</span>
-                                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">epoch_length</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">max_epochs</span><span class="p">,</span>  <span class="c1"># type: ignore[operator]</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">iteration</span><span class="p">,</span> <span class="n">total_iters</span><span class="p">,</span>
                                 <span class="p">)</span>
                             <span class="p">)</span>
                         <span class="k">break</span>
