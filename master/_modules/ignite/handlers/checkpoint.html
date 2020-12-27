@@ -477,10 +477,24 @@
 <span class="sd">            lr_scheduler = ...</span>
 
 <span class="sd">            to_save = {&#39;model&#39;: model, &#39;optimizer&#39;: optimizer, &#39;lr_scheduler&#39;: lr_scheduler, &#39;trainer&#39;: trainer}</span>
-<span class="sd">            handler = Checkpoint(to_save, DiskSaver(&#39;/tmp/models&#39;, create_dir=True), n_saved=2)</span>
-<span class="sd">            trainer.add_event_handler(Events.ITERATION_COMPLETED(every=1000), handler)</span>
+
+<span class="sd">            if (checkpoint_iters):</span>
+<span class="sd">                # A: Output is &quot;checkpoint_&lt;iteration&gt;.pt&quot;</span>
+<span class="sd">                handler = Checkpoint(</span>
+<span class="sd">                    to_save, DiskSaver(&#39;/tmp/models&#39;, create_dir=True), n_saved=2</span>
+<span class="sd">                )</span>
+<span class="sd">                trainer.add_event_handler(Events.ITERATION_COMPLETED(every=1000), handler)</span>
+<span class="sd">            else:</span>
+<span class="sd">                # B:Output is &quot;checkpoint_&lt;epoch&gt;.pt&quot;</span>
+<span class="sd">                gst = lambda *_: trainer.state.epoch</span>
+<span class="sd">                handler = Checkpoint(</span>
+<span class="sd">                    to_save, DiskSaver(&#39;/tmp/models&#39;, create_dir=True), n_saved=2, global_step_transform=gst</span>
+<span class="sd">                )</span>
+<span class="sd">                trainer.add_event_handler(Events.EPOCH_COMPLETED, handler)</span>
+
 <span class="sd">            trainer.run(data_loader, max_epochs=6)</span>
-<span class="sd">            &gt; [&quot;checkpoint_7000.pt&quot;, &quot;checkpoint_8000.pt&quot;, ]</span>
+<span class="sd">            &gt; A: [&quot;checkpoint_7000.pt&quot;, &quot;checkpoint_8000.pt&quot;, ]</span>
+<span class="sd">            &gt; B: [&quot;checkpoint_5.pt&quot;, &quot;checkpoint_6.pt&quot;, ]</span>
 
 <span class="sd">        Attach the handler to an evaluator to save best model during the training</span>
 <span class="sd">        according to computed validation metric:</span>
@@ -568,6 +582,32 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filename_pattern</span> <span class="o">=</span> <span class="n">filename_pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_saved</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># type: List[&quot;Checkpoint.Item&quot;]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">include_self</span> <span class="o">=</span> <span class="n">include_self</span>
+
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Method to reset saved checkpoint names.</span>
+
+<span class="sd">        Use this method if the engine will independently run multiple times:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from ignite.handlers import Checkpoint</span>
+
+<span class="sd">            trainer = ...</span>
+<span class="sd">            checkpointer = Checkpoint(...)</span>
+
+<span class="sd">            trainer.add_event_handler(Events.COMPLETED, checkpointer)</span>
+<span class="sd">            trainer.add_event_handler(Events.STARTED, checkpointer.reset)</span>
+
+<span class="sd">            # fold 0</span>
+<span class="sd">            trainer.run(data0, max_epochs=max_epochs)</span>
+<span class="sd">            print(&quot;Last checkpoint:&quot;, checkpointer.last_checkpoint)</span>
+
+<span class="sd">            # fold 1</span>
+<span class="sd">            trainer.run(data1, max_epochs=max_epochs)</span>
+<span class="sd">            print(&quot;Last checkpoint:&quot;, checkpointer.last_checkpoint)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_saved</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -944,11 +984,11 @@
 <span class="sd">        &gt;&gt;&gt; handler = ModelCheckpoint(&#39;/tmp/models&#39;, &#39;myprefix&#39;, n_saved=2, create_dir=True)</span>
 <span class="sd">        &gt;&gt;&gt; model = nn.Linear(3, 3)</span>
 <span class="sd">        &gt;&gt;&gt; trainer.add_event_handler(Events.EPOCH_COMPLETED(every=2), handler, {&#39;mymodel&#39;: model})</span>
-<span class="sd">        &gt;&gt;&gt; trainer.run([0], max_epochs=6)</span>
+<span class="sd">        &gt;&gt;&gt; trainer.run([0, 1, 2, 3, 4], max_epochs=6)</span>
 <span class="sd">        &gt;&gt;&gt; os.listdir(&#39;/tmp/models&#39;)</span>
-<span class="sd">        [&#39;myprefix_mymodel_4.pt&#39;, &#39;myprefix_mymodel_6.pt&#39;]</span>
+<span class="sd">        [&#39;myprefix_mymodel_20.pt&#39;, &#39;myprefix_mymodel_30.pt&#39;]</span>
 <span class="sd">        &gt;&gt;&gt; handler.last_checkpoint</span>
-<span class="sd">        [&#39;/tmp/models/myprefix_mymodel_6.pt&#39;]</span>
+<span class="sd">        [&#39;/tmp/models/myprefix_mymodel_30.pt&#39;]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
