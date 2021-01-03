@@ -1212,12 +1212,12 @@ remove method, with-statement, or context manager protocol. Returned from
 <div class="section" id="deterministic-training">
 <h3>Deterministic training<a class="headerlink" href="#deterministic-training" title="Permalink to this headline">¶</a></h3>
 <p>In general, it is rather difficult task to achieve deterministic and reproducible trainings as it relies on multiple
-aspects, e.g. data version, code version, software environment, hardware etc. According to <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html">PyTorch documentation</a>:
+aspects, e.g. data version, code version, software environment, hardware etc. According to <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html">PyTorch note on randomness</a>:
 there are some steps to take in order to make computations deterministic on your specific problem on one specific
 platform and PyTorch release:</p>
 <ul class="simple">
 <li><p>setup random state seed</p></li>
-<li><p>set <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html#cudnn">cudnn to deterministic</a> if applicable</p></li>
+<li><p>set <a class="reference external" href="https://pytorch.org/docs/stable/notes/randomness.html#cuda-convolution-benchmarking">cudnn to deterministic</a> if applicable</p></li>
 </ul>
 <p>By default, these two options can be enough to run and rerun experiments in a deterministic way. Ignite’s engine does not impact this behaviour.</p>
 <p>In this module we provide helper methods and classes to make additional “<a class="reference internal" href="#dataflow-synchronization"><span class="std std-ref">Dataflow synchronization</span></a>”

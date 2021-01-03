@@ -666,12 +666,9 @@ default, CPU.</p></li>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">update</span></code> must receive output of the form <code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y}</span></code>.</p></li>
 <li><p><cite>y_pred</cite> must contain logits and has the following shape (batch_size, num_categories, …)</p></li>
-<li><dl class="simple">
-<dt><cite>y</cite> should have the following shape (batch_size, …) and contains ground-truth class indices</dt><dd><p>with or without the background class. During the computation, argmax of <cite>y_pred</cite> is taken to determine
-predicted classes.</p>
-</dd>
-</dl>
-</li>
+<li><p><cite>y</cite> should have the following shape (batch_size, …) and contains ground-truth class indices
+with or without the background class. During the computation, argmax of <cite>y_pred</cite> is taken to determine
+predicted classes.</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
