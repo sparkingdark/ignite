@@ -303,6 +303,9 @@
 <span class="sd">        output_transform (callable, optional): A callable that is used to transform the</span>
 <span class="sd">            :class:`~ignite.engine.engine.Engine`&#39;s ``process_function``&#39;s output into the</span>
 <span class="sd">            form expected by the metric.</span>
+<span class="sd">        device (str or torch.device): specifies which device updates are accumulated on. Setting the metric&#39;s</span>
+<span class="sd">            device to be the same as your ``update`` arguments ensures the ``update`` method is non-blocking. By</span>
+<span class="sd">            default, CPU.</span>
 
 <span class="sd">    Example:</span>
 
@@ -321,6 +324,8 @@
 <span class="sd">        engine = Engine(process_function)</span>
 <span class="sd">        metric = SSIM(data_range=1.0)</span>
 <span class="sd">        metric.attach(engine, &quot;ssim&quot;)</span>
+
+<span class="sd">    .. versionadded:: 0.4.2</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>

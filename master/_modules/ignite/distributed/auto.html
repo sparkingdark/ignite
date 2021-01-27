@@ -449,6 +449,10 @@
 <span class="sd">    .. _torch convert_sync_batchnorm: https://pytorch.org/docs/stable/generated/torch.nn.SyncBatchNorm.html#</span>
 <span class="sd">        torch.nn.SyncBatchNorm.convert_sync_batchnorm</span>
 
+<span class="sd">    .. versionchanged:: 0.4.2</span>
+
+<span class="sd">        - Added Horovod distributed framework.</span>
+<span class="sd">        - Added ``sync_bn`` argument.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">setup_logger</span><span class="p">(</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;.auto_model&quot;</span><span class="p">)</span>
 
@@ -512,7 +516,6 @@
 
 <span class="sd">        optimizer = idist.auto_optim(optimizer)</span>
 
-
 <span class="sd">    Args:</span>
 <span class="sd">        optimizer (Optimizer): input torch optimizer</span>
 
@@ -521,6 +524,8 @@
 
 <span class="sd">    .. _xm.optimizer_step: http://pytorch.org/xla/release/1.5/index.html#torch_xla.core.xla_model.optimizer_step</span>
 
+<span class="sd">    .. versionchanged:: 0.4.2</span>
+<span class="sd">        Added Horovod distributed optimizer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">bnd</span> <span class="o">=</span> <span class="n">idist</span><span class="o">.</span><span class="n">backend</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">idist</span><span class="o">.</span><span class="n">has_xla_support</span> <span class="ow">and</span> <span class="n">bnd</span> <span class="o">==</span> <span class="n">idist_xla</span><span class="o">.</span><span class="n">XLA_TPU</span><span class="p">:</span>

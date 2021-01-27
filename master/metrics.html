@@ -1049,6 +1049,9 @@ In the example below we show how to setup standard metric like Accuracy and the 
 </pre></div>
 </div>
 </div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span><code class="docutils literal notranslate"><span class="pre">required_output_keys</span></code> became public attribute.</p>
+</div>
 <dl class="py method">
 <dt id="ignite.metrics.Metric.attach">
 <code class="sig-name descname">attach</code><span class="sig-paren">(</span><em class="sig-param">engine: ignite.engine.engine.Engine</em>, <em class="sig-param">name: str</em>, <em class="sig-param">usage: Union[str</em>, <em class="sig-param">ignite.metrics.metric.MetricUsage] = &lt;ignite.metrics.metric.EpochWise object&gt;</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/ignite/metrics/metric.html#Metric.attach"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ignite.metrics.Metric.attach" title="Permalink to this definition">¶</a></dt>
@@ -1451,6 +1454,9 @@ Argument is used if <code class="docutils literal notranslate"><span class="pre"
 <li><p><strong>output_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable that is used to transform the
 <a class="reference internal" href="engine.html#ignite.engine.engine.Engine" title="ignite.engine.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">process_function</span></code>’s output into the
 form expected by the metric.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>torch.device</em>) – specifies which device updates are accumulated on. Setting the metric’s
+device to be the same as your <code class="docutils literal notranslate"><span class="pre">update</span></code> arguments ensures the <code class="docutils literal notranslate"><span class="pre">update</span></code> method is non-blocking. By
+default, CPU.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1467,6 +1473,9 @@ to adjust <code class="docutils literal notranslate"><span class="pre">data_rang
 <span class="n">metric</span> <span class="o">=</span> <span class="n">SSIM</span><span class="p">(</span><span class="n">data_range</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">metric</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;ssim&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.2.</span></p>
 </div>
 </dd></dl>
 

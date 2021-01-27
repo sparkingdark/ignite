@@ -455,6 +455,12 @@ if applicable. Please, make sure to use acceptable kwargs for given backend.</p>
 <dd class="field-even"><p>torch.nn.Module</p>
 </dd>
 </dl>
+<div class="versionchanged">
+<ul>
+<span class="versionmodified changed">Changed in version 0.4.2: </span><li><p>Added Horovod distributed framework.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">sync_bn</span></code> argument.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -481,6 +487,9 @@ its state is broadcasted from rank 0 to all other processes.</p>
 <dd class="field-even"><p>Optimizer</p>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span>Added Horovod distributed optimizer.</p>
+</div>
 </dd></dl>
 
 </div>
@@ -642,6 +651,9 @@ This option is only supported by native torch distributed module. For other modu
 </ul>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span><code class="docutils literal notranslate"><span class="pre">backend</span></code> now accepts <cite>horovod</cite> distributed framework.</p>
+</div>
 <dl class="py method">
 <dt id="ignite.distributed.launcher.Parallel.run">
 <code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="_modules/ignite/distributed/launcher.html#Parallel.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ignite.distributed.launcher.Parallel.run" title="Permalink to this definition">¶</a></dt>
@@ -816,6 +828,9 @@ Please, several values are not supported for the backend like “horovod”.</p>
 <dd class="field-odd"><p>str or None</p>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span>Added Horovod distributed framework.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -863,6 +878,9 @@ Make sure to respect dtype of torch tensor input for all processes, otherwise ex
 <span class="c1"># &gt;&gt;&gt; x = 12.3456</span>
 </pre></div>
 </div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.2.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -879,6 +897,9 @@ Make sure to respect dtype of torch tensor input for all processes, otherwise ex
 <dd class="field-odd"><p>torch.device</p>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span>Added Horovod distributed framework.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -973,6 +994,9 @@ Returns 1 if no distributed configuration.</p>
 </ul>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span><code class="docutils literal notranslate"><span class="pre">backend</span></code> now accepts <cite>horovod</cite> distributed framework.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -985,6 +1009,9 @@ Returns 1 if no distributed configuration.</p>
 <li><p><cite>xla-dist</cite> for XLA distributed configuration</p></li>
 <li><p><cite>horovod-dist</cite> for Horovod distributed framework</p></li>
 </ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span><cite>horovod-dist</cite> will be returned for Horovod distributed framework.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -1159,6 +1186,9 @@ where <cite>i</cite> is the process index and args is the passed through tuple o
 </ul>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.2: </span><code class="docutils literal notranslate"><span class="pre">backend</span></code> now accepts <cite>horovod</cite> distributed framework.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">

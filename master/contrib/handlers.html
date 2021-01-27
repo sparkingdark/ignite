@@ -1258,6 +1258,55 @@ Dataflow took total 16.24365s [min/index: 0.00533s/1874, max/index: 0.01129s/937
 </dd></dl>
 
 </div>
+<div class="section" id="stores">
+<h2>stores<a class="headerlink" href="#stores" title="Permalink to this headline">¶</a></h2>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.contrib.handlers.stores.EpochOutputStore" title="ignite.contrib.handlers.stores.EpochOutputStore"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EpochOutputStore</span></code></a></p></td>
+<td><p>EpochOutputStore handler to save output prediction and target history after every epoch, could be useful for e.g., visualization purposes.</p></td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="module-ignite.contrib.handlers.stores"></span><dl class="py class">
+<dt id="ignite.contrib.handlers.stores.EpochOutputStore">
+<em class="property">class </em><code class="sig-prename descclassname">ignite.contrib.handlers.stores.</code><code class="sig-name descname">EpochOutputStore</code><span class="sig-paren">(</span><em class="sig-param">output_transform: Callable = &lt;function EpochOutputStore.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ignite/contrib/handlers/stores.html#EpochOutputStore"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ignite.contrib.handlers.stores.EpochOutputStore" title="Permalink to this definition">¶</a></dt>
+<dd><p>EpochOutputStore handler to save output prediction and target history
+after every epoch, could be useful for e.g., visualization purposes.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This can potentially lead to a memory error if the output data is
+larger than available RAM.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – a callable that is used to
+transform the <a class="reference internal" href="../engine.html#ignite.engine.engine.Engine" title="ignite.engine.engine.Engine"><code class="xref py py-class docutils literal notranslate"><span class="pre">Engine</span></code></a>’s
+<code class="docutils literal notranslate"><span class="pre">process_function</span></code>’s output , e.g., lambda x: x[0]</p>
+</dd>
+</dl>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eos</span> <span class="o">=</span> <span class="n">EpochOutputStore</span><span class="p">()</span>
+<span class="n">trainer</span> <span class="o">=</span> <span class="n">create_supervised_trainer</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+<span class="n">train_evaluator</span> <span class="o">=</span> <span class="n">create_supervised_evaluator</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+<span class="n">eos</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">train_evaluator</span><span class="p">)</span>
+
+<span class="nd">@trainer</span><span class="o">.</span><span class="n">on</span><span class="p">(</span><span class="n">Events</span><span class="o">.</span><span class="n">EPOCH_COMPLETED</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">log_training_results</span><span class="p">(</span><span class="n">engine</span><span class="p">):</span>
+    <span class="n">train_evaluator</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">eos</span><span class="o">.</span><span class="n">data</span>
+    <span class="c1"># do something with output, e.g., plotting</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.4.2.</span></p>
+</div>
+</dd></dl>
+
+</div>
 <div class="section" id="tensorboard-logger">
 <h2>tensorboard_logger<a class="headerlink" href="#tensorboard-logger" title="Permalink to this headline">¶</a></h2>
 <p>See <a class="reference external" href="https://github.com/pytorch/ignite/blob/master/examples/contrib/mnist/mnist_with_tensorboard_logger.py">tensorboardX mnist example</a>
@@ -4782,6 +4831,7 @@ This can be helpful for logging trainer epoch/iteration while output handler is 
 <li><a class="reference internal" href="#param-scheduler">param_scheduler</a></li>
 <li><a class="reference internal" href="#lr-finder">lr_finder</a></li>
 <li><a class="reference internal" href="#time-profilers">time_profilers</a></li>
+<li><a class="reference internal" href="#stores">stores</a></li>
 <li><a class="reference internal" href="#tensorboard-logger">tensorboard_logger</a></li>
 <li><a class="reference internal" href="#visdom-logger">visdom_logger</a></li>
 <li><a class="reference internal" href="#neptune-logger">neptune_logger</a></li>
