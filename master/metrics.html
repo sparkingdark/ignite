@@ -304,6 +304,9 @@ value is then computed using the output of the engine’s <code class="docutils 
 <span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span><span class="n">process_function</span><span class="p">)</span>
 <span class="n">metric</span> <span class="o">=</span> <span class="n">Accuracy</span><span class="p">()</span>
 <span class="n">metric</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="c1"># ...</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>If the engine’s output is not in the format <code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y,</span> <span class="pre">...}</span></code>, the user can
@@ -325,6 +328,9 @@ use the <code class="docutils literal notranslate"><span class="pre">output_tran
 
 <span class="n">metric</span> <span class="o">=</span> <span class="n">Accuracy</span><span class="p">(</span><span class="n">output_transform</span><span class="o">=</span><span class="n">output_transform</span><span class="p">)</span>
 <span class="n">metric</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="c1"># ...</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accuracy: </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition warning">
