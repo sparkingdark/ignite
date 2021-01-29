@@ -617,22 +617,25 @@ devices. Therefore, once collected, these internal variables can be used to comp
 <tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.Precision" title="ignite.metrics.Precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Precision</span></code></a></p></td>
 <td><p>Calculates precision for binary and multiclass data.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.Recall" title="ignite.metrics.Recall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Recall</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.PSNR" title="ignite.metrics.PSNR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PSNR</span></code></a></p></td>
+<td><p>Computes average <a class="reference external" href="https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio">Peak signal-to-noise ratio (PSNR)</a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.Recall" title="ignite.metrics.Recall"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Recall</span></code></a></p></td>
 <td><p>Calculates recall for binary and multiclass data.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.RootMeanSquaredError" title="ignite.metrics.RootMeanSquaredError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootMeanSquaredError</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.RootMeanSquaredError" title="ignite.metrics.RootMeanSquaredError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RootMeanSquaredError</span></code></a></p></td>
 <td><p>Calculates the root mean squared error.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.RunningAverage" title="ignite.metrics.RunningAverage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunningAverage</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.RunningAverage" title="ignite.metrics.RunningAverage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RunningAverage</span></code></a></p></td>
 <td><p>Compute running average of a metric or the output of process function.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.VariableAccumulation" title="ignite.metrics.VariableAccumulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariableAccumulation</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.VariableAccumulation" title="ignite.metrics.VariableAccumulation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VariableAccumulation</span></code></a></p></td>
 <td><p>Single variable accumulator helper to compute (arithmetic, geometric, harmonic) average of a single variable.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frequency</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Frequency</span></code></p></td>
 <td><p>Provides metrics for the number of examples processed per second.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ignite.metrics.SSIM" title="ignite.metrics.SSIM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SSIM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ignite.metrics.SSIM" title="ignite.metrics.SSIM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SSIM</span></code></a></p></td>
 <td><p>Computes Structual Similarity Index Measure</p></td>
 </tr>
 </tbody>
@@ -1290,6 +1293,62 @@ metrics is detached, the metric is considered detached too.</p>
 <span class="c1"># fully attached</span>
 <span class="k">assert</span> <span class="ow">not</span> <span class="n">precision</span><span class="o">.</span><span class="n">is_attached</span><span class="p">(</span><span class="n">engine</span><span class="p">)</span>
 </pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt id="ignite.metrics.PSNR">
+<em class="property">class </em><code class="sig-prename descclassname">ignite.metrics.</code><code class="sig-name descname">PSNR</code><span class="sig-paren">(</span><em class="sig-param">data_range: Optional[Union[int</em>, <em class="sig-param">float]] = None</em>, <em class="sig-param">output_transform: Callable = &lt;function PSNR.&lt;lambda&gt;&gt;</em>, <em class="sig-param">device: Union[str</em>, <em class="sig-param">torch.device] = device(type='cpu')</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ignite/metrics/psnr.html#PSNR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ignite.metrics.PSNR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes average <a class="reference external" href="https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio">Peak signal-to-noise ratio (PSNR)</a>.</p>
+<div class="math">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>PSNR</mtext><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo><mo>=</mo><mn>10</mn><mo>∗</mo><msub><mo><mi>log</mi><mo>⁡</mo></mo><mn>10</mn></msub><mrow><mo fence="true">(</mo><mfrac><mrow><mi>M</mi><mi>A</mi><msubsup><mi>X</mi><mi>i</mi><mn>2</mn></msubsup></mrow><mtext> MSE </mtext></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{PSNR}(i, j) = 10 * \log_{10}\left(\frac{ MAX_{i}^2 }{ \text{ MSE } }\right)
+
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">PSNR</span></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.441138em;vertical-align:-0.95003em;"></span><span class="mop"><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.20696799999999996em;"><span style="top:-2.4558600000000004em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24414em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.491108em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord"> MSE </span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">M</span><span class="mord mathnormal">A</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">X</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-2.441336em;margin-left:-0.07847em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.258664em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span>
+
+</div><p>where <span class="math"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>MSE</mtext></mrow><annotation encoding="application/x-tex">\text{MSE}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord text"><span class="mord">MSE</span></span></span></span></span>
+
+</span> is <a class="reference external" href="https://en.wikipedia.org/wiki/Mean_squared_error">mean squared error</a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A few things to note:</p>
+<ul class="simple">
+<li><p><cite>y_pred</cite> and <cite>y</cite> <strong>must</strong> have (batch_size, …) shape.</p></li>
+<li><p><cite>y_pred</cite> and <cite>y</cite> <strong>must</strong> have same dtype and same shape.</p></li>
+<li><p>If <cite>y_pred</cite> and <cite>y</cite> have almost identical values, the result will be infinity.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_range</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><em>int</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><em>float</em></a><em>, </em><em>optional</em>) – The data range of the target image (distance between minimum
+and maximum possible values). If not provided, it will be estimated from the input
+data type: <code class="docutils literal notranslate"><span class="pre">1.0</span></code> for float/double tensor or <code class="docutils literal notranslate"><span class="pre">255</span></code> for unsigned 8-bit tensor.
+For other data types, please set the data range, otherwise an exception will be raised.</p></li>
+<li><p><strong>output_transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – A callable that is used to transform the Engine’s
+process_function’s output into the form expected by the metric.</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a><em> or </em><em>torch.device</em>) – specifies which device updates are accumulated on.
+Setting the metric’s device to be the same as your update arguments ensures
+the update method is non-blocking. By default, CPU.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<p>To use with <code class="docutils literal notranslate"><span class="pre">Engine</span></code> and <code class="docutils literal notranslate"><span class="pre">process_function</span></code>, simply attach the metric instance to the engine.
+The output of the engine’s <code class="docutils literal notranslate"><span class="pre">process_function</span></code> needs to be in format of
+<code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y,</span> <span class="pre">...}</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">process_function</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+    <span class="c1"># ...</span>
+    <span class="k">return</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">Engine</span><span class="p">(</span><span class="n">process_function</span><span class="p">)</span>
+<span class="n">psnr</span> <span class="o">=</span> <span class="n">PSNR</span><span class="p">()</span>
+<span class="n">psnr</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="s2">&quot;psnr&quot;</span><span class="p">)</span>
+<span class="c1"># ...</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PSNR: </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;psnr&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 0.5.0.</span></p>
 </div>
 </dd></dl>
 
