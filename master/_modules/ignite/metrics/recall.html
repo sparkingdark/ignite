@@ -297,8 +297,11 @@
 
 
 <div class="viewcode-block" id="Recall"><a class="viewcode-back" href="../../../metrics.html#ignite.metrics.Recall">[docs]</a><span class="k">class</span> <span class="nc">Recall</span><span class="p">(</span><span class="n">_BasePrecisionRecall</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates recall for binary and multiclass data.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculates recall for binary and multiclass data.</span>
+
+<span class="sd">    .. math:: \text{Recall} = \frac{ TP }{ TP + FN }</span>
+
+<span class="sd">    where :math:`\text{TP}` is true positives and :math:`\text{FN}` is false negatives.</span>
 
 <span class="sd">    - ``update`` must receive output of the form ``(y_pred, y)`` or ``{&#39;y_pred&#39;: y_pred, &#39;y&#39;: y}``.</span>
 <span class="sd">    - `y_pred` must be in the following shape (batch_size, num_categories, ...) or (batch_size, ...).</span>

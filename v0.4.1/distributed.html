@@ -428,7 +428,7 @@ all available backends from <a class="reference internal" href="#ignite.distribu
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>torch.nn.Module</em>) – model to adapt.</p>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.Module.html#torch.nn.Module" title="(in PyTorch vmaster (1.7.0a0+57bffc3 ))"><em>torch.nn.Module</em></a>) – model to adapt.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>torch.nn.Module</p>
@@ -641,7 +641,7 @@ group or spawn multiple processes.</p>
 <dd><p>Helper method to perform all gather operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>tensor</strong> (<em>torch.Tensor</em><em> or </em><em>number</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – tensor or number or str to collect across participating processes.</p>
+<dd class="field-odd"><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.7.0a0+57bffc3 ))"><em>torch.Tensor</em></a><em> or </em><em>number</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – tensor or number or str to collect across participating processes.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>torch.Tensor of shape <cite>(world_size * tensor.shape[0], tensor.shape[1], …)</cite> or
@@ -657,7 +657,7 @@ List of strings</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tensor</strong> (<em>torch.Tensor</em><em> or </em><em>number</em>) – tensor or number to collect across participating processes.</p></li>
+<li><p><strong>tensor</strong> (<a class="reference external" href="https://pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch vmaster (1.7.0a0+57bffc3 ))"><em>torch.Tensor</em></a><em> or </em><em>number</em>) – tensor or number to collect across participating processes.</p></li>
 <li><p><strong>op</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – reduction operation, “SUM” by default. Possible values: “SUM”, “PRODUCT”, “MIN”, “MAX”, “AND”, “OR”.</p></li>
 </ul>
 </dd>

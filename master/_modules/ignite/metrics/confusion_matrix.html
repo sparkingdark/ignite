@@ -417,7 +417,9 @@
 
 
 <div class="viewcode-block" id="IoU"><a class="viewcode-back" href="../../../metrics.html#ignite.metrics.IoU">[docs]</a><span class="k">def</span> <span class="nf">IoU</span><span class="p">(</span><span class="n">cm</span><span class="p">:</span> <span class="n">ConfusionMatrix</span><span class="p">,</span> <span class="n">ignore_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MetricsLambda</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Calculates Intersection over Union using :class:`~ignite.metrics.ConfusionMatrix` metric.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculates Intersection over Union using :class:`~ignite.metrics.ConfusionMatrix` metric.</span>
+
+<span class="sd">    .. math:: \text{J}(A, B) = \frac{ \lvert A \cap B \rvert }{ \lvert A \cup B \rvert }</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        cm (ConfusionMatrix): instance of confusion matrix metric</span>

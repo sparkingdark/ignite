@@ -296,8 +296,11 @@
 
 
 <div class="viewcode-block" id="MeanSquaredError"><a class="viewcode-back" href="../../../metrics.html#ignite.metrics.MeanSquaredError">[docs]</a><span class="k">class</span> <span class="nc">MeanSquaredError</span><span class="p">(</span><span class="n">Metric</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the mean squared error.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculates the `mean squared error &lt;https://en.wikipedia.org/wiki/Mean_squared_error&gt;`_.</span>
+
+<span class="sd">    .. math:: \text{MSE} = \frac{1}{N} \sum_{i=1}^N \left(y_{i} - x_{i} \right)^2</span>
+
+<span class="sd">    where :math:`y_{i}` is the prediction tensor and :math:`x_{i}` is ground true tensor.</span>
 
 <span class="sd">    - ``update`` must receive output of the form ``(y_pred, y)`` or ``{&#39;y_pred&#39;: y_pred, &#39;y&#39;: y}``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

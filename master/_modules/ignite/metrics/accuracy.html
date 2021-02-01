@@ -379,8 +379,12 @@
 
 
 <div class="viewcode-block" id="Accuracy"><a class="viewcode-back" href="../../../metrics.html#ignite.metrics.Accuracy">[docs]</a><span class="k">class</span> <span class="nc">Accuracy</span><span class="p">(</span><span class="n">_BaseClassification</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the accuracy for binary, multiclass and multilabel data.</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculates the accuracy for binary, multiclass and multilabel data.</span>
+
+<span class="sd">    .. math:: \text{Accuracy} = \frac{ TP + TN }{ TP + TN + FP + FN }</span>
+
+<span class="sd">    where :math:`\text{TP}` is true positives, :math:`\text{TN}` is true negatives,</span>
+<span class="sd">    :math:`\text{FP}` is false positives and :math:`\text{FN}` is false negatives.</span>
 
 <span class="sd">    - ``update`` must receive output of the form ``(y_pred, y)`` or ``{&#39;y_pred&#39;: y_pred, &#39;y&#39;: y}``.</span>
 <span class="sd">    - `y_pred` must be in the following shape (batch_size, num_categories, ...) or (batch_size, ...).</span>
