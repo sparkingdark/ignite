@@ -299,21 +299,16 @@
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes average `Peak signal-to-noise ratio (PSNR) &lt;https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio&gt;`_.</span>
 
 <span class="sd">    .. math::</span>
-<span class="sd">        \text{PSNR}(i, j) = 10 * \log_{10}\left(\frac{ MAX_{i}^2 }{ \text{ MSE } }\right)</span>
+<span class="sd">        \text{PSNR}(I, J) = 10 * \log_{10}\left(\frac{ MAX_{I}^2 }{ \text{ MSE } }\right)</span>
 
 <span class="sd">    where :math:`\text{MSE}` is `mean squared error &lt;https://en.wikipedia.org/wiki/Mean_squared_error&gt;`_.</span>
 
-<span class="sd">    Note:</span>
-<span class="sd">        A few things to note:</span>
-
-<span class="sd">        - `y_pred` and `y` **must** have (batch_size, ...) shape.</span>
-<span class="sd">        - `y_pred` and `y` **must** have same dtype and same shape.</span>
-<span class="sd">        - If `y_pred` and `y` have almost identical values, the result will be infinity.</span>
+<span class="sd">    - `y_pred` and `y` **must** have (batch_size, ...) shape.</span>
+<span class="sd">    - `y_pred` and `y` **must** have same dtype and same shape.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        data_range (int or float, optional): The data range of the target image (distance between minimum</span>
-<span class="sd">            and maximum possible values). If not provided, it will be estimated from the input</span>
-<span class="sd">            data type: ``1.0`` for float/double tensor or ``255`` for unsigned 8-bit tensor.</span>
+<span class="sd">        data_range (int or float): The data range of the target image (distance between minimum</span>
+<span class="sd">            and maximum possible values).</span>
 <span class="sd">            For other data types, please set the data range, otherwise an exception will be raised.</span>
 <span class="sd">        output_transform (callable, optional): A callable that is used to transform the Engine’s</span>
 <span class="sd">            process_function’s output into the form expected by the metric.</span>
@@ -333,27 +328,42 @@
 <span class="sd">            # ...</span>
 <span class="sd">            return y_pred, y</span>
 <span class="sd">        engine = Engine(process_function)</span>
-<span class="sd">        psnr = PSNR()</span>
+<span class="sd">        psnr = PSNR(data_range=1.0)</span>
 <span class="sd">        psnr.attach(engine, &quot;psnr&quot;)</span>
 <span class="sd">        # ...</span>
 <span class="sd">        state = engine.run(data)</span>
 <span class="sd">        print(f&quot;PSNR: {state.metrics[&#39;psnr&#39;]}&quot;)</span>
+
+<span class="sd">    This metric by default accepts Grayscale or RGB images. But if you have YCbCr or YUV images, only</span>
+<span class="sd">    Y channel is needed for computing PSNR. And, this can be done with ``output_transform``. For instance,</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        def get_y_channel(output):</span>
+<span class="sd">            y_pred, y = output</span>
+<span class="sd">            # y_pred and y are (B, 3, H, W) and YCbCr or YUV images</span>
+<span class="sd">            # let&#39;s select y channel</span>
+<span class="sd">            return y_pred[:, 0, ...], y[:, 0, ...]</span>
+
+<span class="sd">        psnr = PSNR(data_range=219, output_transform=get_y_channel)</span>
+<span class="sd">        psnr.attach(engine, &quot;psnr&quot;)</span>
+<span class="sd">        # ...</span>
+<span class="sd">        state = engine.run(data)</span>
+<span class="sd">        print(f&quot;PSNR: {state.metrics[&#39;psrn&#39;]}&quot;)</span>
 
 <span class="sd">    .. versionadded:: 0.5.0</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">data_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">data_range</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
         <span class="n">output_transform</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
         <span class="n">device</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cpu&quot;</span><span class="p">),</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output_transform</span><span class="o">=</span><span class="n">output_transform</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_range</span> <span class="o">=</span> <span class="n">data_range</span>
 
-    <span class="k">def</span> <span class="nf">_check_shape_dtype_drange</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">],</span> <span class="n">data_range</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_check_shape_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">output</span>
         <span class="k">if</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
@@ -365,26 +375,6 @@
                 <span class="sa">f</span><span class="s2">&quot;Expected y_pred and y to have the same shape. Got y_pred: </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> and y: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">data_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">dmin</span><span class="p">,</span> <span class="n">dmax</span> <span class="o">=</span> <span class="n">_dtype_range</span><span class="p">[</span><span class="n">y</span><span class="o">.</span><span class="n">dtype</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Range for this dtype cannot be automatically estimated. Please manually specify the data_range.&quot;</span>
-                <span class="p">)</span>
-            <span class="n">true_min</span><span class="p">,</span> <span class="n">true_max</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">true_max</span> <span class="o">&gt;</span> <span class="n">dmax</span> <span class="ow">or</span> <span class="n">true_min</span> <span class="o">&lt;</span> <span class="n">dmin</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;y has intensity values outside the range expected &quot;</span>
-                    <span class="s2">&quot;for its data type. Please manually specify the data_range.&quot;</span>
-                <span class="p">)</span>
-            <span class="k">if</span> <span class="n">true_min</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="c1"># most common case (255 for uint8, 1 for float)</span>
-                <span class="n">data_range</span> <span class="o">=</span> <span class="n">dmax</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data_range</span> <span class="o">=</span> <span class="n">dmax</span> <span class="o">-</span> <span class="n">dmin</span>
-        <span class="k">return</span> <span class="n">data_range</span>
-
     <span class="nd">@reinit__is_reduced</span>
     <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sum_of_batchwise_psnr</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span><span class="p">)</span>
@@ -392,13 +382,12 @@
 
     <span class="nd">@reinit__is_reduced</span>
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">data_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_range</span>
-        <span class="n">data_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_shape_dtype_drange</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">data_range</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_shape_dtype</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
         <span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
 
         <span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
         <span class="n">mse_error</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">y_pred</span><span class="o">.</span><span class="n">double</span><span class="p">()</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">view_as</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sum_of_batchwise_psnr</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data_range</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">mse_error</span><span class="p">))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sum_of_batchwise_psnr</span> <span class="o">+=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mf">10.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_range</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">mse_error</span> <span class="o">+</span> <span class="mf">1e-10</span><span class="p">)))</span><span class="o">.</span><span class="n">to</span><span class="p">(</span>
             <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_device</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_examples</span> <span class="o">+=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -408,14 +397,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_examples</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotComputableError</span><span class="p">(</span><span class="s2">&quot;PSNR must have at least one example before it can be computed.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sum_of_batchwise_psnr</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_examples</span></div>
-
-
-<span class="n">_dtype_range</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">uint8</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
-<span class="p">}</span>
 </pre></div>
 
              </article>
