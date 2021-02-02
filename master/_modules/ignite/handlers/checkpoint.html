@@ -545,7 +545,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">to_save</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">],</span>
+        <span class="n">to_save</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span>
         <span class="n">save_handler</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">BaseSaveHandler</span><span class="p">],</span>
         <span class="n">filename_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">score_function</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -557,23 +557,19 @@
         <span class="n">greater_or_equal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="n">to_save</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># for compatibility with ModelCheckpoint</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Argument `to_save` should be a dictionary, but given </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">to_save</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Mapping</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Argument `to_save` should be a dictionary, but given </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">to_save</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_save</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No objects to checkpoint.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_objects</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="s2">&quot;state_dict&quot;</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_check_objects</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="s2">&quot;state_dict&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">include_self</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">MutableMapping</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;If `include_self` is True, then `to_save` must be mutable, but given </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">to_save</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">include_self</span><span class="p">:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">to_save</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">MutableMapping</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;If `include_self` is True, then `to_save` must be mutable, but given </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">to_save</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
-                    <span class="p">)</span>
-
-                <span class="k">if</span> <span class="s2">&quot;checkpointer&quot;</span> <span class="ow">in</span> <span class="n">to_save</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot have key &#39;checkpointer&#39; if `include_self` is True: </span><span class="si">{</span><span class="n">to_save</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;checkpointer&quot;</span> <span class="ow">in</span> <span class="n">to_save</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot have key &#39;checkpointer&#39; if `include_self` is True: </span><span class="si">{</span><span class="n">to_save</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">callable</span><span class="p">(</span><span class="n">save_handler</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">save_handler</span><span class="p">,</span> <span class="n">BaseSaveHandler</span><span class="p">)):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Argument `save_handler` should be callable or inherit from BaseSaveHandler&quot;</span><span class="p">)</span>
@@ -1035,7 +1031,7 @@
         <span class="n">disk_saver</span> <span class="o">=</span> <span class="n">DiskSaver</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">atomic</span><span class="o">=</span><span class="n">atomic</span><span class="p">,</span> <span class="n">create_dir</span><span class="o">=</span><span class="n">create_dir</span><span class="p">,</span> <span class="n">require_empty</span><span class="o">=</span><span class="n">require_empty</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">ModelCheckpoint</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">to_save</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">to_save</span><span class="o">=</span><span class="p">{},</span>
             <span class="n">save_handler</span><span class="o">=</span><span class="n">disk_saver</span><span class="p">,</span>
             <span class="n">filename_prefix</span><span class="o">=</span><span class="n">filename_prefix</span><span class="p">,</span>
             <span class="n">score_function</span><span class="o">=</span><span class="n">score_function</span><span class="p">,</span>
