@@ -396,6 +396,9 @@ If None, distributed_rank is initialized to the rank of process.</p></li>
 <dd><p>Convert a tensor of indices of any shape <cite>(N, …)</cite> to a
 tensor of one-hot indicators of shape <cite>(N, num_classes, …) and of type uint8. Output’s device is equal to the
 input’s device</cite>.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.3: </span>This functions is now torchscriptable.</p>
+</div>
 </dd></dl>
 
 </div>
