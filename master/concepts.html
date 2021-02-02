@@ -488,6 +488,8 @@ event filtering function:</p>
 <span class="n">trainer</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">max_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
+<div class="section" id="custom-events">
+<h3>Custom events<a class="headerlink" href="#custom-events" title="Permalink to this headline">¶</a></h3>
 <p>The user can also define custom events. Events defined by user should inherit from <a class="reference internal" href="engine.html#ignite.engine.events.EventEnum" title="ignite.engine.events.EventEnum"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventEnum</span></code></a>
 and be registered with <a class="reference internal" href="engine.html#ignite.engine.engine.Engine.register_events" title="ignite.engine.engine.Engine.register_events"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_events()</span></code></a> in an <cite>engine</cite>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ignite.engine</span> <span class="kn">import</span> <span class="n">EventEnum</span>
@@ -516,6 +518,25 @@ and be registered with <a class="reference internal" href="engine.html#ignite.en
 <p class="admonition-title">Note</p>
 <p>See the source code of <code class="xref py py-class docutils literal notranslate"><span class="pre">create_supervised_tbptt_trainer</span></code> for an example of usage of
 custom events.</p>
+</div>
+<p>If you want to use filtering with custom events (e.g. <code class="docutils literal notranslate"><span class="pre">CustomEvents.CUSTOM_STARTED(every=5)</span></code>), you need to do 3 more things:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">engine.state</span></code> should have corresponding attributes for the events, e.g. <code class="docutils literal notranslate"><span class="pre">engine.state.custom_started</span></code></p></li>
+<li><p>you need to pass a dict <cite>event_to_attr</cite> to <a class="reference internal" href="engine.html#ignite.engine.engine.Engine.register_events" title="ignite.engine.engine.Engine.register_events"><code class="xref py py-meth docutils literal notranslate"><span class="pre">register_events()</span></code></a>, which maps between events and state attributes, e.g.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">event_to_attr</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">CustomEvents</span><span class="o">.</span><span class="n">CUSTOM_STARTED</span><span class="p">:</span> <span class="s2">&quot;custom_started&quot;</span><span class="p">,</span>
+    <span class="n">CustomEvents</span><span class="o">.</span><span class="n">CUSTOM_COMPLETED</span><span class="p">:</span> <span class="s2">&quot;custom_completed&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>you should increase the counter for the event whenever you fire the event, e.g. <code class="docutils literal notranslate"><span class="pre">engine.state.custom_started</span> <span class="pre">+=</span> <span class="pre">1</span></code></p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This solution for filtering is a temporary workaround and may change in the future.</p>
+</div>
 </div>
 <div class="section" id="handlers">
 <h3>Handlers<a class="headerlink" href="#handlers" title="Permalink to this headline">¶</a></h3>
@@ -730,6 +751,7 @@ metrics are supported : 1) online and 2) storing the entire output history.</p>
 <li><a class="reference internal" href="#">Concepts</a><ul>
 <li><a class="reference internal" href="#engine">Engine</a></li>
 <li><a class="reference internal" href="#events-and-handlers">Events and Handlers</a><ul>
+<li><a class="reference internal" href="#custom-events">Custom events</a></li>
 <li><a class="reference internal" href="#handlers">Handlers</a></li>
 <li><a class="reference internal" href="#timeline-and-events">Timeline and events</a></li>
 </ul>
