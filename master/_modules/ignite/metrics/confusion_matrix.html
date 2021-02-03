@@ -301,13 +301,14 @@
     <span class="sd">&quot;&quot;&quot;Calculates confusion matrix for multi-class data.</span>
 
 <span class="sd">    - ``update`` must receive output of the form ``(y_pred, y)`` or ``{&#39;y_pred&#39;: y_pred, &#39;y&#39;: y}``.</span>
-<span class="sd">    - `y_pred` must contain logits and has the following shape (batch_size, num_categories, ...)</span>
+<span class="sd">    - `y_pred` must contain logits and has the following shape (batch_size, num_classes, ...).</span>
+<span class="sd">      If you are doing binary classification, see Note for an example on how to get this.</span>
 <span class="sd">    - `y` should have the following shape (batch_size, ...) and contains ground-truth class indices</span>
 <span class="sd">      with or without the background class. During the computation, argmax of `y_pred` is taken to determine</span>
 <span class="sd">      predicted classes.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        num_classes (int): number of classes. See notes for more details.</span>
+<span class="sd">        num_classes (int): Number of classes, should be &gt; 1. See notes for more details.</span>
 <span class="sd">        average (str, optional): confusion matrix values averaging schema: None, &quot;samples&quot;, &quot;recall&quot;, &quot;precision&quot;.</span>
 <span class="sd">            Default is None. If `average=&quot;samples&quot;` then confusion matrix values are normalized by the number of seen</span>
 <span class="sd">            samples. If `average=&quot;recall&quot;` then confusion matrix values are normalized such that diagonal values</span>
@@ -326,6 +327,27 @@
 <span class="sd">        contribute to the confusion matrix and others are neglected. For example, if `num_classes=20` and target index</span>
 <span class="sd">        equal 255 is encountered, then it is filtered out.</span>
 
+<span class="sd">        If you are doing binary classification with a single output unit, you may have to transform your network output,</span>
+<span class="sd">        so that you have one value for each class. E.g. you can transform your network output into a one-hot vector</span>
+<span class="sd">        with:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            def binary_one_hot_output_transform(output):</span>
+<span class="sd">                y_pred, y = output</span>
+<span class="sd">                y_pred = torch.sigmoid(y_pred).round().long()</span>
+<span class="sd">                y_pred = ignite.utils.to_onehot(y_pred, 2)</span>
+<span class="sd">                y = y.long()</span>
+<span class="sd">                return y_pred, y</span>
+
+<span class="sd">            metrics = {</span>
+<span class="sd">                &quot;confusion_matrix&quot;: ConfusionMatrix(2, output_transform=binary_one_hot_output_transform),</span>
+<span class="sd">            }</span>
+
+<span class="sd">            evaluator = create_supervised_evaluator(</span>
+<span class="sd">                model, metrics=metrics, output_transform=lambda x, y, y_pred: (y_pred, y)</span>
+<span class="sd">            )</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -337,6 +359,9 @@
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">average</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">average</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;samples&quot;</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Argument average can None or one of &#39;samples&#39;, &#39;recall&#39;, &#39;precision&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">num_classes</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Argument num_classes needs to be &gt; 1&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">num_classes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_num_examples</span> <span class="o">=</span> <span class="mi">0</span>
@@ -352,17 +377,18 @@
         <span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_pred must have shape (batch_size, num_categories, ...), but given </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;y_pred must have shape (batch_size, num_classes (currently set to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">), ...), &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but given </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;y_pred does not have correct number of categories: </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_pred does not have correct number of classes: </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">y_pred</span><span class="o">.</span><span class="n">ndimension</span><span class="p">()):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;y_pred must have shape (batch_size, num_categories, ...) and y must have &quot;</span>
-                <span class="s2">&quot;shape of (batch_size, ...), &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;y_pred must have shape (batch_size, num_classes (currently set to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_classes</span><span class="si">}</span><span class="s2">), ...) &quot;</span>
+                <span class="s2">&quot;and y must have shape of (batch_size, ...), &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;but given </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">y_pred</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
             <span class="p">)</span>
 
