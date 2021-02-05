@@ -494,6 +494,9 @@
 
 <span class="sd">        Returns:</span>
 <span class="sd">            :class:`~ignite.engine.RemovableEventHandle`, which can be used to remove the handler.</span>
+
+<span class="sd">        .. versionchanged:: 0.4.3</span>
+<span class="sd">            Added missing return statement.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_opt_params_handler</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">event_name</span><span class="o">=</span><span class="n">event_name</span><span class="p">)</span>
 

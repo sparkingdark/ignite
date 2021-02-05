@@ -306,6 +306,9 @@
 
 <span class="sd">    - ``update`` must receive output of the form ``(y_pred, y)`` or ``{&#39;y_pred&#39;: y_pred, &#39;y&#39;: y}``.</span>
 <span class="sd">    - `y` and `y_pred` must be of same shape `(N, )` or `(N, 1)` and of type `float32`.</span>
+
+<span class="sd">    .. versionchanged:: 0.4.3</span>
+<span class="sd">        Works with DDP.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>

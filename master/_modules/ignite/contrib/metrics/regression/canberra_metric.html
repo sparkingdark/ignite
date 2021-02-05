@@ -309,6 +309,10 @@
 <span class="sd">    .. _scikit-learn distance metrics:</span>
 <span class="sd">        https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.DistanceMetric.html</span>
 
+<span class="sd">    .. versionchanged:: 0.4.3</span>
+
+<span class="sd">        - Fixed implementation: ``abs`` in denominator.</span>
+<span class="sd">        - Works with DDP.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>

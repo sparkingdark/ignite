@@ -537,7 +537,9 @@
 <span class="sd">            &gt; [&quot;best_model_9_val_acc=0.77.pt&quot;, &quot;best_model_10_val_acc=0.78.pt&quot;, ]</span>
 
 <span class="sd">    .. versionchanged:: 0.4.3</span>
-<span class="sd">        Added ``greater_or_equal`` parameter.</span>
+
+<span class="sd">        - Checkpoint can save model with same filename.</span>
+<span class="sd">        - Added ``greater_or_equal`` argument.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">Item</span> <span class="o">=</span> <span class="n">NamedTuple</span><span class="p">(</span><span class="s2">&quot;Item&quot;</span><span class="p">,</span> <span class="p">[(</span><span class="s2">&quot;priority&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)])</span>

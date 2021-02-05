@@ -416,6 +416,9 @@ contain computed metric’s value under provided name.</p>
 </ul>
 </dd>
 </dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.3: </span>Added dict in metrics results.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -630,6 +633,12 @@ metrics useful for regression tasks. Definitions of metrics are based on <a clas
 <li><p><code class="docutils literal notranslate"><span class="pre">update</span></code> must receive output of the form <code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y}</span></code>.</p></li>
 <li><p><cite>y</cite> and <cite>y_pred</cite> must be of same shape <cite>(N, )</cite> or <cite>(N, 1)</cite>.</p></li>
 </ul>
+<div class="versionchanged">
+<ul>
+<span class="versionmodified changed">Changed in version 0.4.3: </span><li><p>Fixed implementation: <code class="docutils literal notranslate"><span class="pre">abs</span></code> in denominator.</p></li>
+<li><p>Works with DDP.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py class">
@@ -735,6 +744,12 @@ metrics useful for regression tasks. Definitions of metrics are based on <a clas
 <li><p><code class="docutils literal notranslate"><span class="pre">update</span></code> must receive output of the form <code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y}</span></code>.</p></li>
 <li><p><cite>y</cite> and <cite>y_pred</cite> must be of same shape <cite>(N, )</cite> or <cite>(N, 1)</cite>.</p></li>
 </ul>
+<div class="versionchanged">
+<ul>
+<span class="versionmodified changed">Changed in version 0.4.3: </span><li><p>Fixed sklearn compatibility.</p></li>
+<li><p>Workes with DDP.</p></li>
+</ul>
+</div>
 </dd></dl>
 
 <dl class="py class">
@@ -921,6 +936,9 @@ This can potentially lead to a memory error if the input data is larger than ava
 <li><p><code class="docutils literal notranslate"><span class="pre">update</span></code> must receive output of the form <code class="docutils literal notranslate"><span class="pre">(y_pred,</span> <span class="pre">y)</span></code> or <code class="docutils literal notranslate"><span class="pre">{'y_pred':</span> <span class="pre">y_pred,</span> <span class="pre">'y':</span> <span class="pre">y}</span></code>.</p></li>
 <li><p><cite>y</cite> and <cite>y_pred</cite> must be of same shape <cite>(N, )</cite> or <cite>(N, 1)</cite> and of type <cite>float32</cite>.</p></li>
 </ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.4.3: </span>Works with DDP.</p>
+</div>
 </dd></dl>
 
 <dl class="py class">
